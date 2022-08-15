@@ -222,7 +222,7 @@ function draw() {
       player.sprite.visible = false;
       player.staff.visible = false;
 
-      if(stfOn == true){
+      if(sfxOn == true){
         hitSFX.play();
       }
 
