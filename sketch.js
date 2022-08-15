@@ -1,0 +1,281 @@
+var player, map, Enemies;
+
+var gameState;
+
+var BJG, mainmenu, forest, menuSFX, attackSFX, hitSFX;
+
+var musicSetting, sfxSetting, musicSettingX, sfxSettingX, musicOn, sfxOn, clicktimer;
+
+var startButton;
+
+function preload() {
+  soundFormats('wav');
+  BJG = loadFont('assets/BJG.ttf');
+
+  mainmenu = loadSound('assets/main.wav');
+  forest = loadSound('assets/forest.wav');
+
+  menuSFX = loadSound('assets/menu.wav');
+  attackSFX = loadSound('assets/firecast.wav');
+  hitSFX = loadSound('assets/hit.wav');
+}
+
+function setup() {
+  createCanvas(640, 640);
+
+  gameState = 'start';
+  menuState = 'play';
+
+  player = new Player(320,320,"assets/player.png", "assets/smolstaff.png");
+  map = new Map(loadImage("assets/wall1.png"),loadImage("assets/tree1.png"),loadImage("assets/fence1.png"));
+
+  musicSetting = createSprite(350,275,32,32);
+  musicSetting.addImage(loadImage('assets/music.png'));
+  musicSetting.visible = false;
+
+  musicSettingX = createSprite(350,275,0,0);
+  musicSettingX.addImage(loadImage('assets/X.png'));
+  musicSettingX.visible = false;
+
+  sfxSetting = createSprite(345,325,32,32);
+  sfxSetting.addImage(loadImage('assets/sfx.png'));
+  sfxSetting.visible = false;
+
+  sfxSettingX = createSprite(345,325,0,0);
+  sfxSettingX.addImage(loadImage('assets/X.png'));
+  sfxSettingX.visible = false;
+
+  musicOn = true;
+  sfxOn = true;
+
+  clicktimer = 0;
+
+  Enemies = [];
+  enemyGroup = new Group();
+
+  map.drawMap();
+
+  mainmenu.play();
+}
+
+function draw() {
+  background(rgb(15, 0, 20));
+
+  if(gameState == 'start'){
+    player.sprite.visible = false;
+    player.staff.visible = false;
+
+    drawSprites();
+
+    if(menuState == 'play'){
+      textSize(90);
+      textFont(BJG);
+      fill(rgb(222, 210, 202));
+      text('DARK FOREST',30,260);
+      
+      textSize(30);
+      textFont(BJG);
+      fill(rgb(194, 175, 163));
+      text('Press "enter"',210,330);
+      text('to start',250,350);
+
+      textSize(30);
+      textFont(BJG);
+      fill(rgb(194, 175, 163));
+      text('Press "s"',238,500);
+      text('to change',238,520);
+      text('settings',245,540);
+      
+      if(keyWentDown('s')){
+        menuState = 'settings';
+
+        musicSetting.visible = true;
+        sfxSetting.visible = true;
+        if(musicOn == false){
+          musicSettingX.visible = true;
+        }
+        if(sfxOn == false){
+          sfxSettingX.visible = true;
+        }
+      }
+
+      if(keyDown('enter')){
+        player.sprite.visible = true;
+        player.staff.visible = true;
+
+        if(sfxOn == true){
+          menuSFX.play();
+        }
+        
+
+        if(musicOn == true){
+          mainmenu.stop();
+          forest.play();
+        }
+
+        gameState = 'game';
+      }
+    }
+
+    if(menuState == 'settings'){
+      textSize(90);
+      textFont(BJG);
+      fill(rgb(222, 210, 202));
+      text('SETTINGS',100,200);
+
+      textSize(20);
+      textFont(BJG);
+      fill(rgb(194, 175, 163));
+      text('click to change settings',178,230);
+
+      textSize(30);
+      textFont(BJG);
+      fill(rgb(194, 175, 163));
+      text('Music:',210,280);
+
+      textSize(30);
+      textFont(BJG);
+      fill(rgb(194, 175, 163));
+      text('SFX:',250,330);
+
+      textSize(30);
+      textFont(BJG);
+      fill(rgb(194, 175, 163));
+      text('Press "esc"',228,500);
+      text('to go back',235,520);
+      
+
+      if(mousePressedOver(musicSetting)&&clicktimer==0){
+        if(musicSettingX.visible == false){
+          musicSettingX.visible = true;
+          musicOn = false;
+          clicktimer = 1;
+
+          mainmenu.stop();
+        }
+        else if(musicSettingX.visible == true){
+          musicSettingX.visible = false;
+          musicOn = true;
+          clicktimer = 1;
+
+          mainmenu.play();
+        }
+      }
+
+      if(mousePressedOver(sfxSetting)&&clicktimer==0){
+        if(sfxSettingX.visible == false){
+          sfxSettingX.visible = true;
+          sfxOn = false;
+          clicktimer = 1;
+        }
+        else if(sfxSettingX.visible == true){
+          sfxSettingX.visible = false;
+          sfxOn = true;
+          clicktimer = 1;
+        }
+      }
+
+      if(clicktimer != 0){
+        clicktimer -= 0.1;
+      }
+      if(clicktimer < 0){
+          clicktimer = 0;
+      }
+
+      if(keyWentDown('esc')){
+        menuState = 'play';
+
+        musicSetting.visible = false;
+        sfxSetting.visible = false;
+        musicSettingX.visible = false;
+        sfxSettingX.visible = false;
+      }
+
+    }
+  }
+  if(gameState == 'game'){
+
+    textSize(30);
+    textFont(BJG);
+    fill(rgb(194, 175, 163));
+    text(player.score, 40, 50);
+
+    player.movement();
+    player.stafflogic(attackSFX, sfxOn);
+
+    if(map.spawners != null){
+      for(spawner in map.spawners){
+        map.spawners[spawner].logic(enemyGroup, Enemies, player, map.spawnerMinCooldown, map.spawnerMaxCooldown);
+      }
+    }
+
+    if(Enemies != null){
+      for(enemy in Enemies){
+        Enemies[enemy].movement(player.sprite);
+        Enemies[enemy].logic(player, map, hitSFX, sfxOn);
+      }
+    }
+
+    player.sprite.collide(map.tile_colliders);
+
+    if(player.sprite.collide(enemyGroup)){
+      player.sprite.visible = false;
+      player.staff.visible = false;
+
+      if(stfOn == true){
+        hitSFX.play();
+      }
+
+      gameState = 'over';
+    }
+    drawSprites();
+  }
+  if(gameState == 'over'){
+
+    for(enemy in Enemies){
+      Enemies[enemy].sprite.remove();
+    }
+
+    textSize(60);
+    textFont(BJG);
+    fill(rgb(222, 210, 202));
+    text('GAME OVER',160,280);
+
+    textSize(30);
+    textFont(BJG);
+    fill(rgb(194, 175, 163));
+    text(player.score, 310, 380);
+
+    textSize(30);
+    fill(rgb(194, 175, 163));
+    text('Press "enter"',210,330);
+    text('to restart',230,350);
+
+    if(keyDown('enter')){
+      player.sprite.visible = false;
+      player.staff.visible = false;
+
+      player.score = 0;
+
+      player.sprite.x = 320;
+      player.sprite.y = 320;
+      player.sprite.velocityX = 0;
+      player.sprite.velocityY = 0;
+
+      if(sfxOn == true){
+        menuSFX.play();
+      }
+
+      if(musicOn == true){
+        mainmenu.play();
+        forest.stop();
+      }
+      
+
+      gameState = 'start';
+    }
+    drawSprites();
+  }
+
+  //drawSprites();
+}
