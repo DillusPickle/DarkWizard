@@ -64,6 +64,9 @@ function draw() {
   if(gameState == 'start'){
     player.sprite.visible = false;
     player.staff.visible = false;
+    player.hp3.visible = false;
+    player.hp2.visible = false;
+    player.hp1.visible = false;
 
     drawSprites();
 
@@ -102,6 +105,8 @@ function draw() {
       if(keyDown('enter')){
         player.sprite.visible = true;
         player.staff.visible = true;
+
+        player.hp = 3;
 
         if(sfxOn == true){
           menuSFX.play();
@@ -198,10 +203,11 @@ function draw() {
     textSize(30);
     textFont(BJG);
     fill(rgb(194, 175, 163));
-    text(player.score, 40, 50);
+    text(player.score, 40, 80);
 
     player.movement();
     player.stafflogic(attackSFX, sfxOn);
+    player.healthLogic();
 
     if(map.spawners != null){
       for(spawner in map.spawners){
@@ -218,13 +224,21 @@ function draw() {
 
     player.sprite.collide(map.tile_colliders);
 
-    if(player.sprite.collide(enemyGroup)){
-      player.sprite.visible = false;
-      player.staff.visible = false;
+    if(player.sprite.overlap(enemyGroup)&&player.invincibility == 0){
+      player.hp -= 1;
+      player.invincibility = 20;
 
       if(sfxOn == true){
         hitSFX.play();
       }
+    }
+
+    if(player.hp == 0){
+      player.sprite.visible = false;
+      player.staff.visible = false;
+      player.hp3.visible = false;
+      player.hp2.visible = false;
+      player.hp1.visible = false;
 
       gameState = 'over';
     }

@@ -14,6 +14,19 @@ class Player{
         
         this.score = 0;
 
+        this.hp = 3;
+        this.heartImg = loadImage('assets/hp.png');
+        this.invincibility = 0;
+        this.healingtimercooldown = 500;
+        this.healingtimer = 500;
+
+        this.hp1 = createSprite(50,50,1,1);
+        this.hp1.addImage('icon',this.heartImg);
+        this.hp2 = createSprite(75,50,1,1);
+        this.hp2.addImage('icon',this.heartImg);
+        this.hp3 = createSprite(100,50,1,1);
+        this.hp3.addImage('icon',this.heartImg);
+
         this.cooldown = 0;
         this.timer = 7;
         this.bulletdistance = 20;
@@ -99,5 +112,50 @@ class Player{
         this.of3.Step();
         pop();
     
+    }
+
+    healthLogic(){
+
+        switch(this.hp){
+            case 3:
+                this.hp3.visible = true;
+                this.hp2.visible = true;
+                this.hp1.visible = true;
+                break;
+            case 2:
+                this.hp3.visible = true;
+                this.hp2.visible = true;
+                this.hp1.visible = false;
+                break;
+            case 1:
+                this.hp3.visible = true;
+                this.hp2.visible = false;
+                this.hp1.visible = false;
+                break;
+            case 0:
+                this.hp3.visible = false;
+                this.hp2.visible = false;
+                this.hp1.visible = false;
+        }
+
+        if(this.hp < 0){
+            this.hp = 0;
+        }
+        if(this.hp > 3){
+            this.hp = 3;
+        }
+
+        if(this.healingtimer > 0){
+            this.healingtimer -= 1;
+        }
+        
+        if(this.healingtimer == 0){
+            this.hp += 1;
+            this.healingtimer = this.healingtimercooldown;
+        }
+
+        if(this.invincibility > 0){
+            this.invincibility -= 1;
+        }
     }
 }

@@ -57,6 +57,7 @@ class Enemy{
                 player.bulletsize += [2,0.5];
                 map.spawnerMinCooldown -= 1;
                 map.spawnerMaxCooldown -= 2
+                player.healingtimercooldown -= 20;
             }
             if(player.score % 40 == 0 && player.score < 120){
                 map.spawnerMinCooldown -= 1;
