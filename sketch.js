@@ -9,15 +9,17 @@ var musicSetting, sfxSetting, musicSettingX, sfxSettingX, musicOn, sfxOn, clickt
 var startButton;
 
 function preload() {
+
   soundFormats('ogg','wav');
+  
   BJG = loadFont('assets/BJG.woff');
 
   mainmenu = loadSound('assets/main.ogg');
   forest = loadSound('assets/forest.ogg');
 
-  menuSFX = loadSound('assets/menu.wav');
-  attackSFX = loadSound('assets/firecast.wav');
-  hitSFX = loadSound('assets/hit.wav');
+  menuSFX = loadSound('assets/menu.ogg');
+  attackSFX = loadSound('assets/firecast.ogg');
+  hitSFX = loadSound('assets/hit.ogg');
 }
 
 function setup() {
