@@ -11,7 +11,7 @@ var startButton;
 function preload() {
 
   soundFormats('ogg','wav');
-  
+
   BJG = loadFont('assets/BJG.woff');
 
   mainmenu = loadSound('assets/main.ogg');
@@ -47,8 +47,8 @@ function setup() {
   sfxSettingX.addImage(loadImage('assets/X.png'));
   sfxSettingX.visible = false;
 
-  musicOn = false;
-  sfxOn = false;
+  musicOn = on;
+  sfxOn = on;
 
   clicktimer = 0;
 
