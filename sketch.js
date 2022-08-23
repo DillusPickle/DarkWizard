@@ -47,8 +47,8 @@ function setup() {
   sfxSettingX.addImage(loadImage('assets/X.png'));
   sfxSettingX.visible = false;
 
-  musicOn = on;
-  sfxOn = on;
+  musicOn = true;
+  sfxOn = true;
 
   clicktimer = 0;
 
