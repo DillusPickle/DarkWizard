@@ -1,6 +1,6 @@
-var player, map, Enemies;
+var player, map, Enemies, enemyGroup;
 
-var gameState;
+var gameState, menuState;
 
 var BJG, mainmenu, forest, menuSFX, attackSFX, hitSFX;
 
