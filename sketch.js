@@ -90,6 +90,14 @@ function draw() {
       text('Press "s"',238,500);
       text('to change',238,520);
       text('settings',245,540);
+
+      textSize(15);
+      textFont(BJG);
+      fill(rgb(194, 175, 163));
+      text('W, A, S and D',100,500);
+      text('to move',100,515);
+      text('Right click',100,545);
+      text('to fire',100,560);
       
       if(keyWentDown('s')){
         menuState = 'settings';
