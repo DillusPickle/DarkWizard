@@ -281,6 +281,11 @@ function draw() {
 
       player.score = 0;
 
+      player.cooldown = 0;
+      player.timer = 7;
+      player.bulletdistance = 20;
+      player.bulletsize = [8, 3];
+
       player.sprite.x = 320;
       player.sprite.y = 320;
       player.sprite.velocityX = 0;
