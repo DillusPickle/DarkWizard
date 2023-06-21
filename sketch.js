@@ -285,6 +285,9 @@ function draw() {
       player.timer = 7;
       player.bulletdistance = 20;
       player.bulletsize = [8, 3];
+      map.spawnerMinCooldown = 17
+      map.spawnerMaxCooldown = 32
+      player.healingtimercooldown = 500;
 
       player.sprite.x = 320;
       player.sprite.y = 320;
