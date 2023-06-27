@@ -6,8 +6,6 @@ class Enemy{
         this.type = type;
         
         this.sprite.setCollider('rectangle',0,0,32,32);
-
-        this.cooldown = 0;
     }
 
     defineType(){
@@ -24,19 +22,9 @@ class Enemy{
     }
 
     movement(player){
-        if (this.cooldown == 0) {
-            this.sprite.velocityX = 0;
-            this.sprite.velocityY = 0;
-            this.sprite.attractionPoint(this.speed, player.x, player.y);
-            this.cooldown = 1;
-        }
-
-        if(this.cooldown != 0){
-            this.cooldown -= 0.1;
-        }
-        if(this.cooldown < 0){
-            this.cooldown = 0;
-        }
+        this.sprite.velocityX = 0;
+        this.sprite.velocityY = 0;
+        this.sprite.attractionPoint(this.speed, player.x, player.y);
 
         if(this.type == 2){
             this.sprite.collide(map.tile_colliders);
